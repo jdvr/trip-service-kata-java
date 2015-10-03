@@ -1,15 +1,24 @@
 package org.craftedsw.tripservicekata.trip;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.user.User;
 import org.junit.Test;
+
+import static junit.framework.Assert.assertNotNull;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TripServiceTest {
 
     /**
      * TODO LIST:
-     *  No hay un usuario loggeado
-     *  El usuario logeado y el objetivono son amigos
+     *  El usuario logeado y el objetivo no son amigos
      *  El usuario logeado y el objetivo son amigo y el objetivo tiene viajes
      */
 
@@ -20,6 +29,19 @@ public class TripServiceTest {
         TripService tripService = new TripServiceFake(null);
         tripService.getTripsByUser(new User());
     }
+
+    @Test
+    public void should_return_and_empty_triplist_when_logged_user_and_user_are_friend_but_user_not_has_trips() throws Exception{
+        User loggedUser = new User();
+        User user = mock(User.class);
+        TripService tripService = new TripServiceFake(loggedUser);
+        when(user.getFriends()).thenReturn(Collections.singletonList(loggedUser));
+        List<Trip> tripsByUser = tripService.getTripsByUser(user);
+        assertNotNull(tripsByUser);
+        assertThat(tripsByUser.size(), is(0));
+    }
+
+
 
     private class TripServiceFake extends TripService {
         private User loggedUser;
@@ -33,5 +55,7 @@ public class TripServiceTest {
         protected User getLoggedUser() {
             return loggedUser;
         }
+
+
     }
 }
