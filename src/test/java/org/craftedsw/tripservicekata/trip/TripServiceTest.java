@@ -13,10 +13,25 @@ public class TripServiceTest {
      *  El usuario logeado y el objetivo son amigo y el objetivo tiene viajes
      */
 
+
+
     @Test(expected = UserNotLoggedInException.class)
     public void throw_an_exception_when_there_is_no_logged_user() throws Exception{
-        TripService tripService = new TripService();
+        TripService tripService = new TripServiceFake(null);
         tripService.getTripsByUser(new User());
     }
-	
+
+    private class TripServiceFake extends TripService {
+        private User loggedUser;
+
+        public TripServiceFake(User loggedUser){
+
+            this.loggedUser = loggedUser;
+        }
+
+        @Override
+        protected User getLoggedUser() {
+            return loggedUser;
+        }
+    }
 }
