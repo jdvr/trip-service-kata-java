@@ -10,6 +10,7 @@ import org.craftedsw.tripservicekata.user.User;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertNotNull;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -35,7 +36,7 @@ public class TripServiceShould {
         User loggedUser = new User();
         User user = mock(User.class);
         TripService tripService = new TripServiceFake(loggedUser);
-        when(user.getFriends()).thenReturn(Collections.singletonList(loggedUser));
+        when(user.isFriendOf(loggedUser)).thenReturn(true);
         List<Trip> tripsByUser = tripService.getTripsByUser(user);
         assertNotNull(tripsByUser);
         assertThat(tripsByUser.size(), is(0));
@@ -46,8 +47,8 @@ public class TripServiceShould {
     public void return_and_empty_triplist_when_logged_user_and_user_are_not_friend() throws Exception{
         User loggedUser = new User();
         User user = mock(User.class);
+        when(user.isFriendOf(loggedUser)).thenReturn(true);
         TripService tripService = new TripServiceFake(loggedUser);
-        when(user.getFriends()).thenReturn(new ArrayList<>());
         List<Trip> tripsByUser = tripService.getTripsByUser(user);
         assertNotNull(tripsByUser);
         assertThat(tripsByUser.size(), is(0));
