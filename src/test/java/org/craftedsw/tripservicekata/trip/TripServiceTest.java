@@ -43,6 +43,7 @@ public class TripServiceTest {
 
 
 
+
     private class TripServiceFake extends TripService {
         private User loggedUser;
 
@@ -56,6 +57,9 @@ public class TripServiceTest {
             return loggedUser;
         }
 
-
+        @Override
+        protected List<Trip> findUserTrips(User user) {
+            return user.trips();
+        }
     }
 }
