@@ -30,7 +30,7 @@ public class TripServiceShould {
     @Test(expected = UserNotLoggedInException.class)
     public void throw_an_exception_when_there_is_no_logged_user() throws Exception {
         when(userSessionService.getLoggedUser()).thenReturn(null);
-        TripService tripService = new TripServiceFake(userSessionService, tripRepository);
+        TripService tripService = new TripService(userSessionService, tripRepository);
         tripService.getTripsByUser(new User());
     }
 
@@ -39,7 +39,7 @@ public class TripServiceShould {
         User loggedUser = new User();
         User user = mock(User.class);
         when(userSessionService.getLoggedUser()).thenReturn(loggedUser);
-        TripService tripService = new TripServiceFake(userSessionService, tripRepository);
+        TripService tripService = new TripService(userSessionService, tripRepository);
         when(user.isFriendOf(loggedUser)).thenReturn(true);
         List<Trip> tripsByUser = tripService.getTripsByUser(user);
         assertNotNull(tripsByUser);
@@ -53,7 +53,7 @@ public class TripServiceShould {
         User user = mock(User.class);
         when(user.isFriendOf(loggedUser)).thenReturn(true);
         when(userSessionService.getLoggedUser()).thenReturn(loggedUser);
-        TripService tripService = new TripServiceFake(userSessionService, tripRepository);
+        TripService tripService = new TripService(userSessionService, tripRepository);
         List<Trip> tripsByUser = tripService.getTripsByUser(user);
         assertNotNull(tripsByUser);
         assertThat(tripsByUser.size(), is(0));
@@ -64,7 +64,7 @@ public class TripServiceShould {
         User loggedUser = new User();
         User user = mock(User.class);
         when(userSessionService.getLoggedUser()).thenReturn(loggedUser);
-        TripService tripService = new TripServiceFake(userSessionService, tripRepository);
+        TripService tripService = new TripService(userSessionService, tripRepository);
         when(user.isFriendOf(loggedUser)).thenReturn(true);
         List<Trip> fakeTrips = fakeTripsList();
         when(tripRepository.findTripsBy(user)).thenReturn(fakeTrips);
@@ -81,20 +81,4 @@ public class TripServiceShould {
         );
     }
 
-
-    private class TripServiceFake extends TripService {
-        private UserSessionService userSessionService;
-
-        public TripServiceFake(UserSessionService userSessionService, TripRepository tripRepository){
-
-            super(tripRepository);
-            this.userSessionService = userSessionService;
-        }
-
-        @Override
-        protected User getLoggedUser() {
-            return userSessionService.getLoggedUser();
-        }
-
-    }
 }

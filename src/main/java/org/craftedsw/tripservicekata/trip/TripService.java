@@ -1,18 +1,20 @@
 package org.craftedsw.tripservicekata.trip;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.user.User;
 import org.craftedsw.tripservicekata.user.UserSession;
+import org.craftedsw.tripservicekata.user.UserSessionService;
 
 public class TripService {
 
+    private UserSessionService userSessionService;
     private final TripRepository tripRepository;
 
-    public TripService(TripRepository tripRepository) {
+    public TripService(UserSessionService userSessionService, TripRepository tripRepository) {
+        this.userSessionService = userSessionService;
         this.tripRepository = tripRepository;
     }
 
@@ -31,7 +33,7 @@ public class TripService {
     }
 
 	protected User getLoggedUser() {
-		return UserSession.getInstance().getLoggedUser();
+		return userSessionService.getLoggedUser();
 	}
 
 }
