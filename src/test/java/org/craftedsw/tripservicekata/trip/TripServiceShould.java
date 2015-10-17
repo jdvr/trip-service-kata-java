@@ -1,8 +1,6 @@
 package org.craftedsw.tripservicekata.trip;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
@@ -13,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static junit.framework.Assert.assertNotNull;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -80,12 +77,11 @@ public class TripServiceShould {
 
     private class TripServiceFake extends TripService {
         private User loggedUser;
-        private TripRepository tripRepository;
 
         public TripServiceFake(User loggedUser, TripRepository tripRepository){
 
+            super(tripRepository);
             this.loggedUser = loggedUser;
-            this.tripRepository = tripRepository;
         }
 
         @Override
@@ -93,9 +89,6 @@ public class TripServiceShould {
             return loggedUser;
         }
 
-        @Override
-        protected List<Trip> findUserTrips(User user) {
-            return tripRepository.findTripsBy(user);
-        }
+
     }
 }
