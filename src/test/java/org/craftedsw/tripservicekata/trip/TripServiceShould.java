@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.user.User;
+import org.craftedsw.tripservicekata.user.UserSessionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -23,10 +24,13 @@ public class TripServiceShould {
     @Mock
     TripRepository tripRepository;
 
+    @Mock
+    UserSessionService userSessionService;
 
     @Test(expected = UserNotLoggedInException.class)
-    public void throw_an_exception_when_there_is_no_logged_user() throws Exception{
-        TripService tripService = new TripServiceFake(null, tripRepository);
+    public void throw_an_exception_when_there_is_no_logged_user() throws Exception {
+        when(userSessionService.getLoggedUser()).thenReturn(null);
+        TripService tripService = new TripServiceFake(userSessionService, tripRepository);
         tripService.getTripsByUser(new User());
     }
 
@@ -34,7 +38,8 @@ public class TripServiceShould {
     public void return_and_empty_triplist_when_logged_user_and_user_are_friend_but_user_not_has_trips() throws Exception{
         User loggedUser = new User();
         User user = mock(User.class);
-        TripService tripService = new TripServiceFake(loggedUser, tripRepository);
+        when(userSessionService.getLoggedUser()).thenReturn(loggedUser);
+        TripService tripService = new TripServiceFake(userSessionService, tripRepository);
         when(user.isFriendOf(loggedUser)).thenReturn(true);
         List<Trip> tripsByUser = tripService.getTripsByUser(user);
         assertNotNull(tripsByUser);
@@ -47,7 +52,8 @@ public class TripServiceShould {
         User loggedUser = new User();
         User user = mock(User.class);
         when(user.isFriendOf(loggedUser)).thenReturn(true);
-        TripService tripService = new TripServiceFake(loggedUser, tripRepository);
+        when(userSessionService.getLoggedUser()).thenReturn(loggedUser);
+        TripService tripService = new TripServiceFake(userSessionService, tripRepository);
         List<Trip> tripsByUser = tripService.getTripsByUser(user);
         assertNotNull(tripsByUser);
         assertThat(tripsByUser.size(), is(0));
@@ -57,7 +63,8 @@ public class TripServiceShould {
     public void return_user_triplist_when_logged_user_and_user_are_friend() throws Exception{
         User loggedUser = new User();
         User user = mock(User.class);
-        TripService tripService = new TripServiceFake(loggedUser, tripRepository);
+        when(userSessionService.getLoggedUser()).thenReturn(loggedUser);
+        TripService tripService = new TripServiceFake(userSessionService, tripRepository);
         when(user.isFriendOf(loggedUser)).thenReturn(true);
         List<Trip> fakeTrips = fakeTripsList();
         when(tripRepository.findTripsBy(user)).thenReturn(fakeTrips);
@@ -76,19 +83,18 @@ public class TripServiceShould {
 
 
     private class TripServiceFake extends TripService {
-        private User loggedUser;
+        private UserSessionService userSessionService;
 
-        public TripServiceFake(User loggedUser, TripRepository tripRepository){
+        public TripServiceFake(UserSessionService userSessionService, TripRepository tripRepository){
 
             super(tripRepository);
-            this.loggedUser = loggedUser;
+            this.userSessionService = userSessionService;
         }
 
         @Override
         protected User getLoggedUser() {
-            return loggedUser;
+            return userSessionService.getLoggedUser();
         }
-
 
     }
 }
