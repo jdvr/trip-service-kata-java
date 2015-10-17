@@ -15,7 +15,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TripServiceTest {
+public class TripServiceShould {
 
     /**
      * TODO LIST:
@@ -31,7 +31,7 @@ public class TripServiceTest {
     }
 
     @Test
-    public void should_return_and_empty_triplist_when_logged_user_and_user_are_friend_but_user_not_has_trips() throws Exception{
+    public void return_and_empty_triplist_when_logged_user_and_user_are_friend_but_user_not_has_trips() throws Exception{
         User loggedUser = new User();
         User user = mock(User.class);
         TripService tripService = new TripServiceFake(loggedUser);
@@ -43,7 +43,7 @@ public class TripServiceTest {
 
 
     @Test
-    public void should_return_and_empty_triplist_when_logged_user_and_user_are_not_friend() throws Exception{
+    public void return_and_empty_triplist_when_logged_user_and_user_are_not_friend() throws Exception{
         User loggedUser = new User();
         User user = mock(User.class);
         TripService tripService = new TripServiceFake(loggedUser);
