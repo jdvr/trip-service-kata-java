@@ -1,5 +1,6 @@
 package org.craftedsw.tripservicekata.trip;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +19,6 @@ public class TripServiceTest {
 
     /**
      * TODO LIST:
-     *  El usuario logeado y el objetivo no son amigos
      *  El usuario logeado y el objetivo son amigo y el objetivo tiene viajes
      */
 
@@ -36,6 +36,18 @@ public class TripServiceTest {
         User user = mock(User.class);
         TripService tripService = new TripServiceFake(loggedUser);
         when(user.getFriends()).thenReturn(Collections.singletonList(loggedUser));
+        List<Trip> tripsByUser = tripService.getTripsByUser(user);
+        assertNotNull(tripsByUser);
+        assertThat(tripsByUser.size(), is(0));
+    }
+
+
+    @Test
+    public void should_return_and_empty_triplist_when_logged_user_and_user_are_not_friend() throws Exception{
+        User loggedUser = new User();
+        User user = mock(User.class);
+        TripService tripService = new TripServiceFake(loggedUser);
+        when(user.getFriends()).thenReturn(new ArrayList<>());
         List<Trip> tripsByUser = tripService.getTripsByUser(user);
         assertNotNull(tripsByUser);
         assertThat(tripsByUser.size(), is(0));
