@@ -53,7 +53,26 @@ public class TripServiceShould {
         assertThat(tripsByUser.size(), is(0));
     }
 
+    @Test
+    public void return_user_triplist_when_logged_user_and_user_are_friend() throws Exception{
+        User loggedUser = new User();
+        User user = mock(User.class);
+        TripService tripService = new TripServiceFake(loggedUser);
+        when(user.isFriendOf(loggedUser)).thenReturn(true);
+        List<Trip> fakeTrips = fakeTripsList();
+        when(user.trips()).thenReturn(fakeTrips);
+        List<Trip> tripsByUser = tripService.getTripsByUser(user);
+        assertNotNull(tripsByUser);
+        assertThat(tripsByUser, is(fakeTrips));
+    }
 
+    private List<Trip> fakeTripsList() {
+        return Arrays.asList(
+                new Trip(),
+                new Trip(),
+                new Trip()
+        );
+    }
 
 
     private class TripServiceFake extends TripService {
