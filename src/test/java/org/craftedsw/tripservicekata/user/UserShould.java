@@ -10,7 +10,6 @@ public class UserShould {
     /**
      * TODO LIST:
      * User has not friends
-     * User and logged User are friends
      * User has friends but User and logged User are not friends
      */
 
@@ -23,4 +22,10 @@ public class UserShould {
         assertThat(friendOf, is(false));
     }
 
+    @Test
+    public void return_true_when_they_are_friends() throws Exception {
+        user.addFriend(loggedUser);
+        boolean friendOf = user.isFriendOf(loggedUser);
+        assertThat(friendOf, is(true));
+    }
 }
