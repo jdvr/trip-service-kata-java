@@ -28,7 +28,7 @@ public class User {
 
 	public boolean isFriendOf(User loggedUser) {
 		return getFriends().stream()
-                    .filter(friend -> friend.equals(loggedUser))
+                    .filter(loggedUser::equals)
                     .findFirst()
                     .isPresent();
 	}
