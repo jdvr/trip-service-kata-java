@@ -7,11 +7,6 @@ import static org.junit.Assert.assertThat;
 
 public class UserShould {
 
-    /**
-     * TODO LIST:
-     * User has not friends
-     * User has friends but User and logged User are not friends
-     */
 
     User user = new User();
     User loggedUser = new User();
@@ -28,4 +23,15 @@ public class UserShould {
         boolean friendOf = user.isFriendOf(loggedUser);
         assertThat(friendOf, is(true));
     }
+
+    @Test
+    public void return_true_when_they_are_not_friends_but_user_has_more_friends() throws Exception {
+        user.addFriend(new User());
+        user.addFriend(new User());
+        user.addFriend(new User());
+        user.addFriend(new User());
+        boolean friendOf = user.isFriendOf(loggedUser);
+        assertThat(friendOf, is(false));
+    }
+
 }

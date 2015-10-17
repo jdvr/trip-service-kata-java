@@ -27,13 +27,9 @@ public class User {
 	}
 
 	public boolean isFriendOf(User loggedUser) {
-		boolean isFriend = false;
-		for (User friend : getFriends()) {
-			if (friend.equals(loggedUser)) {
-				isFriend = true;
-				break;
-			}
-		}
-		return isFriend;
+		return getFriends().stream()
+                    .filter(friend -> friend.equals(loggedUser))
+                    .findFirst()
+                    .isPresent();
 	}
 }
